@@ -20,25 +20,25 @@ public:
     }
     pinMode(wiringpi_pin_, OUTPUT);
 
-    // magnet トピックをサブスクライブ
+    // is_magnet トピックをサブスクライブ
     sub_ = this->create_subscription<std_msgs::msg::Bool>(
-      "magnet", 10,
-      std::bind(&RelayNode::magnet_callback, this, std::placeholders::_1)
+      "is_magnet", 10,
+      std::bind(&RelayNode::is_magnet_callback, this, std::placeholders::_1)
     );
 
     RCLCPP_INFO(this->get_logger(),
-      "RelayNode started on WiringPi pin %d, subscribing to 'magnet'",
+      "RelayNode started on WiringPi pin %d, subscribing to 'is_magnet'",
       wiringpi_pin_);
   }
 
 private:
-  void magnet_callback(const std_msgs::msg::Bool::SharedPtr msg)
+  void is_magnet_callback(const std_msgs::msg::Bool::SharedPtr msg)
   {
     // 受信したデータが true → ON、false → OFF
     bool state = msg->data;
     digitalWrite(wiringpi_pin_, state ? HIGH : LOW);
     RCLCPP_INFO(this->get_logger(),
-      "Received magnet=%s → Relay %s",
+      "Received is_magnet=%s → Relay %s",
       state ? "true" : "false",
       state ? "ON" : "OFF");
   }
